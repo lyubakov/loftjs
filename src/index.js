@@ -30,14 +30,8 @@ function returnFirstArgument(el) {
  Пример:
    sumWithDefaults(10) вернет 110
  */
-function sumWithDefaults(a, b) {
-  if (!b){
-    var b = 100;
-  } else {
-    var b = b;
-  }
-  var sum = a + b;
-  return sum;
+function sumWithDefaults(a, b = 100) {
+  return a + b;
 }
 
 /*
@@ -66,10 +60,7 @@ function returnFnResult(fn) {
    console.log(f()); // выведет 13
  */
 
-function returnCounter(number) {
-  if(!number){
-    number = 0;
-  }
+function returnCounter(number = 0) {
   return function F() {
     return ++number;
   }
