@@ -18,31 +18,27 @@
  */
 function isAllTrue(array, fn) {
   //выбрасываем исключения
-  try {
-    if (!Array.isArray(array) || array.length === 0){
-      throw new Error('empty array');
-    } else if (typeof(fn)!= 'function') {
-      throw new Error('fn is not a function');
-    }
-  } catch (error) {
-    console.log(error.message);
+  if (!Array.isArray(array) || array.length === 0){
+    throw new Error('empty array');
   }
-  //создаем пустой массив для сбора значений функции
-  let results = [];
+  if (typeof(fn)!= 'function') {
+    throw new Error('fn is not a function');
+  }
   //выполняем функцию для каждого элемента и записываем значение в массив
-  for (const el of array) {
-    fn(el);
-    results.push(fn(el));
+  // for (const el of array) {
+  //   fn(el);
+  //   if (!fn(el)) {
+  //     return false;
+  //   };
+  //   return true;
+  // }
+  for (let i = 0; i < array.length; i++) {
+    const el = array[i];
+    if (!fn(el)) {
+      return false;
+    };
   }
-  //итоговый результат
-  let final = true;
-  //ищем отрицательный результат и если находим, переписываем итоговый ответ
-  for (const result of results) {
-    if (result == false) {
-        final = false;
-    }
-  }
-  return final;
+  return true;
 }
 /*
  Задание 2:
@@ -62,14 +58,11 @@ function isAllTrue(array, fn) {
  */
 function isSomeTrue(array, fn) {
   //выбрасываем исключения
-  try {
-    if (!Array.isArray(array) || array.length === 0){
-      throw new Error('empty array');
-    } else if (typeof(fn)!= 'function') {
-      throw new Error('fn is not a function');
-    }
-  } catch (error) {
-    console.log(error.message);
+  if (!Array.isArray(array) || array.length === 0){
+    throw new Error('empty array');
+  } 
+  if (typeof(fn)!= 'function') {
+    throw new Error('fn is not a function');
   }
   //создаем пустой массив для сбора значений функции
   let results = [];
@@ -105,27 +98,19 @@ let fn = a => {
   }
 };
 function returnBadArguments(fn, ...args) {
-  try {
-    if (typeof(fn)!= 'function') {
-      throw new Error('fn is not a function');
-    }
-  } catch (e) {
-    console.log(e.message);
+  if (typeof(fn)!= 'function') {
+    throw new Error('fn is not a function');
   }
   let errors = [];
   for (const arg of args) {
-    console.log(arg, fn(arg));
     try {
       fn(arg);
     } catch (e) {
-      console.log('нашел'+e.message);
       errors.push(arg);
-    } finally {
-      errors.push(arg);
-      console.log('errors: ',errors);
-      return errors;
-    }
+    } 
   }
+
+  return errors;
 }
 returnBadArguments(fn, 2,3,5,6);
 /*
@@ -145,66 +130,23 @@ returnBadArguments(fn, 2,3,5,6);
    - number не является числом (с текстом "number is not a number")
    - какой-либо из аргументов div является нулем (с текстом "division by 0")
  */
-function calculator(number=0, ...args) {
+function calculator(number=0) {
   //выбрасываем исключения
-  console.log(args);
-  try {
-    if (isNaN(number)){
-      throw new Error('number is not a number');
-    } 
-  } catch (error) {
-    console.log(error.message);
+  if (isNaN(number)){
+    throw new Error('number is not a number');
   }
-//   let number = number;
-//   let args = arguments;
-  let calc = {
-    sum: function () {
-      let summa = number;
-      for (const arg of args) {
-        summa += arg;
-      }
-      console.log(summa);
-      return summa;
-    },
-    dif: function(){
-      let difference = number;
-      for (const arg of args) {
-        difference -= arg;
-      }
-      console.log(difference);
-      return difference;
-    },
-    div: function(){
-      let division = number;
-      for (const arg of args) {
-        try {
-         if (arg === 0){
-            throw new Error('division by 0');
-          } 
-        } catch (error) {
-          console.log(error.message);
-        }
-        division = division/arg;
-      }
-      console.log(division);
-      return division;
-    },
-    mul: function(){
-      let multiplier = number;
-      for (const arg of args) {
-        multiplier = multiplier*arg;
-      }
-      console.log(multiplier);
-      return multiplier;
+  let calc = {};
+  calc.sum = (...args) => args.reduce((prev, curr) => prev + curr, number);
+  calc.dif = (...args) => args.reduce((prev, curr) => prev - curr, number);
+  calc.div = (...args) => args.reduce((prev, curr) => {
+    if (!curr) {
+      throw new Error('division by 0');
     }
-  }
-  console.log(calc.sum());
-  console.log(calc.dif());
-  console.log(calc.div());
-  console.log(calc.mul());
+    return prev / curr;
+  }, number);
+  calc.mul = (...args) => args.reduce((prev, curr) => prev * curr, number);
   return calc;
 }
-calculator(1000,2,0,2,2);
 
 /* При решении задач, пострайтесь использовать отладчик */
 
