@@ -13,6 +13,7 @@
 function createDivWithText(text) {
   let div = document.createElement('div');
   div.textContent = text;
+  return div;
 }
 /*
  Задание 2:
@@ -45,12 +46,15 @@ function prepend(what, where) {
 
    findAllPSiblings(document.body) // функция должна вернуть массив с элементами div и span т.к. следующим соседом этих элементов является элемент с тегом P
  */
+const html = ""
+ 
 function findAllPSiblings(where) {
   elems = [];
-  for (const child of where.children) {
-      if (child.nextElementSibling.tagName === "P") {
-          elems.push(child);
-      }
+  for (const child of where.childNodes) {
+    console.log(child);
+    if (child.tagName === "P") {
+        elems.push(child.previousElementSibling);
+    }
   }
   return elems;
 }
@@ -116,11 +120,12 @@ function deleteTextNodes(where) {
  */
 function deleteTextNodesRecursive(where) {
   let nodes = where.childNodes;
-  for (const child of nodes.childNodes) {
-    if (child.nodeType === 3) {
-      where.removeChild(child);
+  for (let i = 0; i < nodes.length; i++) {
+    if (nodes[i].nodeType === 3) {
+      nodes[i].remove();
+      i--;
     } else {
-      deleteTextNodesRecursive(child);
+      deleteTextNodesRecursive(nodes[i]);
     }
   }
 }
