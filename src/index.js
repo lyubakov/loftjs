@@ -9,8 +9,11 @@
    delayPromise(3) // вернет promise, который будет разрешен через 3 секунды
  */
 function delayPromise(seconds) {
+    let promise = new Promise((resolve, reject) => {
+        setTimeout (() => resolve("done"), seconds);
+    });
+    return promise;
 }
-
 /*
  Задание 2:
 
@@ -25,8 +28,15 @@ function delayPromise(seconds) {
    loadAndSortTowns().then(towns => console.log(towns)) // должна вывести в консоль отсортированный массив городов
  */
 function loadAndSortTowns() {
+    return fetch("https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json")
+        .then((response)=>{
+            response.json().then(data => {
+                data.sort((a,b) => (a.name > b.name ) ? 1 : ((a.name < b.name) ? -1 : 0));
+                return data;
+            });
+        });
 }
-
+loadAndSortTowns();
 export {
     delayPromise,
     loadAndSortTowns
